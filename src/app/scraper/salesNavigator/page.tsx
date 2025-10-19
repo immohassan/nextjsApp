@@ -4,9 +4,55 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { IconArrowLeft, IconClock, IconListDetails } from "@tabler/icons-react"
+import { IconArrowLeft, IconClock, IconListDetails, IconCheck } from "@tabler/icons-react"
+import { useState } from "react"
 
 export default function SalesNavPage() {
+  const [formData, setFormData] = useState({
+    searchName: "",
+    salesNavUrl: "",
+    liAtCookie: ""
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false)
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }))
+  }
+
+  const isFormValid = formData.searchName && formData.salesNavUrl && formData.liAtCookie
+
+  const handleSubmit = async () => {
+    if (!isFormValid) return
+    
+    setIsSubmitting(true)
+    try {
+      const response = await fetch('https://goclienflow.com/webhook/076f4358-cad3-4ac4-916b-8f79b143b05b', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      })
+      
+      if (response.ok) {
+        setShowSuccessAlert(true)
+        // Reset form after successful submission
+        setFormData({
+          searchName: "",
+          salesNavUrl: "",
+          liAtCookie: ""
+        })
+      } else {
+        alert('Failed to submit form')
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error)
+      alert('Error submitting form')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
@@ -29,6 +75,16 @@ export default function SalesNavPage() {
         </div>
       </div>
 
+      {/* Success Alert */}
+      {showSuccessAlert && (
+        <div className="relative w-full rounded-lg border border-green-200 bg-green-50 p-4">
+          <IconCheck className="absolute left-4 top-4 h-4 w-4 text-green-600" />
+          <div className="pl-7 text-sm text-green-800">
+            Your request has been submitted! Your results will be visible in about 10-15 minutes in the tables.
+          </div>
+        </div>
+      )}
+
       {/* Body: two-column grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Left: Extraction setup */}
@@ -49,12 +105,20 @@ export default function SalesNavPage() {
 
             <div>
               <label className="block font-medium mb-1">1. Give your search a name</label>
-              <Input placeholder="Start typing" />
+              <Input 
+                placeholder="Start typing" 
+                value={formData.searchName}
+                onChange={(e) => handleInputChange('searchName', e.target.value)}
+              />
             </div>
 
             <div>
               <label className="block font-medium mb-1">2. Paste the LinkedIn Sales Navigator search url</label>
-              <Input placeholder="Start typing" />
+              <Input 
+                placeholder="Start typing" 
+                value={formData.salesNavUrl}
+                onChange={(e) => handleInputChange('salesNavUrl', e.target.value)}
+              />
               <p className="text-xs text-muted-foreground mt-1">
                 Input example: https://www.linkedin.com/sales/search/people#query=xyz
               </p>
@@ -63,15 +127,29 @@ export default function SalesNavPage() {
             <div>
               <label className="block font-medium mb-1">3. Connect your LinkedIn account</label>
               <div className="flex items-center gap-2 mb-2">
-                <Button size="sm" variant="secondary" className="bg-pink-100 text-pink-700">
-                  Download extension
+                <Button size="sm" variant="secondary" className="bg-pink-100 text-pink-700" asChild>
+                  <a
+                    href="https://chromewebstore.google.com/detail/airscale-cookie-importer/hklojeelolieobofdgnboacmigmnkbop"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Download extension
+                  </a>
                 </Button>
               </div>
-              <Input placeholder='Paste your "li_at" cookie' />
+              <Input 
+                placeholder='Paste your "li_at" cookie' 
+                value={formData.liAtCookie}
+                onChange={(e) => handleInputChange('liAtCookie', e.target.value)}
+              />
             </div>
 
-            <Button className="w-full" disabled>
-              Missing input
+            <Button 
+              className="w-full" 
+              disabled={!isFormValid || isSubmitting}
+              onClick={handleSubmit}
+            >
+              {isSubmitting ? 'Scraping...' : 'Scrap Leads'}
             </Button>
           </CardContent>
         </Card>

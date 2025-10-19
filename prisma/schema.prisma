@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// Model for storing spreadsheet metadata
+model Spreadsheet {
+  id          String   @id @default(cuid())
+  url         String   @unique
+  title       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  records     SpreadsheetRecord[]
+  tableConfig TableConfig?
+}
+
+// Model for storing individual spreadsheet records
+model SpreadsheetRecord {
+  id            String     @id @default(cuid())
+  spreadsheetId String
+  rowIndex      Int
+  data          Json       // Store the row data as JSON
+  email         String?    // Additional email column
+  aiSummary     String?    // Additional AI Summary column
+  emailTemplate String?    // Additional Email template column
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  
+  spreadsheet   Spreadsheet @relation(fields: [spreadsheetId], references: [id], onDelete: Cascade)
+  
+  @@unique([spreadsheetId, rowIndex])
+}
+
+// Model for storing table configuration
+model TableConfig {
+  id            String     @id @default(cuid())
+  spreadsheetId String     @unique
+  headers       Json       // Store the original headers from the sheet
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  
+  spreadsheet   Spreadsheet @relation(fields: [spreadsheetId], references: [id], onDelete: Cascade)
+}
+

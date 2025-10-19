@@ -21,27 +21,27 @@ export default function NewDashboardPage() {
       icon: <MdOutlinePeopleAlt className="h-5 w-5" />,
       href: "/scraper/salesNavigator"
     },
-    {
-      title: "Extract leads from Apollo",
-      desc: "Extract leads from an Apollo search",
-      badge: "Free",
-      tag: "Popular",
-      icon: <LuRadar className="h-5 w-5" />,
-      href: "/scraper/salesNavigator"
-    },
-    {
-      title: "Extract Linkedin post likers and commenters",
-      desc: "Extract the users who have reacted or commented on a LinkedIn post",
-      badge: "Free",
-      icon: <FaLinkedin className="h-5 w-5 text-blue-600" />,
-      href: "/scraper/salesNavigator"
-    },
+    // {
+    //   title: "Extract leads from Apollo",
+    //   desc: "Extract leads from an Apollo search",
+    //   badge: "Free",
+    //   tag: "Popular",
+    //   icon: <LuRadar className="h-5 w-5" />,
+    //   href: "/scraper/salesNavigator"
+    // },
+    // {
+    //   title: "Extract Linkedin post likers and commenters",
+    //   desc: "Extract the users who have reacted or commented on a LinkedIn post",
+    //   badge: "Free",
+    //   icon: <FaLinkedin className="h-5 w-5 text-blue-600" />,
+    //   href: "/scraper/salesNavigator"
+    // },
     {
       title: "Import people as csv",
       desc: "Import from an existing spreadsheet (xlsx, csv,..) and map columns",
       badge: "Free",
       icon: <FaArrowDown className="h-5 w-5" />,
-      href: "/scraper/salesNavigator"
+      href: "/spreadsheet-import"
     },
   ]
 

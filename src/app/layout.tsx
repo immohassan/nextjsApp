@@ -25,6 +25,52 @@ import { Button } from "@/components/ui/button"
 import { Menu } from "lucide-react"
 import Link from "next/link"
 
+function SpreadsheetTables() {
+  const [spreadsheets, setSpreadsheets] = React.useState<any[]>([])
+  const [loading, setLoading] = React.useState(true)
+
+  React.useEffect(() => {
+    const fetchSpreadsheets = async () => {
+      try {
+        const response = await fetch('/api/spreadsheets')
+        const data = await response.json()
+        
+        if (data.success) {
+          setSpreadsheets(data.data)
+        }
+      } catch (error) {
+        console.error('Error fetching spreadsheets:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchSpreadsheets()
+  }, [])
+
+  if (loading) {
+    return <div className="text-sm text-muted-foreground">Loading...</div>
+  }
+
+  if (spreadsheets.length === 0) {
+    return <div className="text-sm text-muted-foreground">No tables imported</div>
+  }
+
+  return (
+    <div className="space-y-1">
+      {spreadsheets.map((spreadsheet) => (
+        <Link
+          key={spreadsheet.id}
+          href={`/dashboard?table=${spreadsheet.id}`}
+          className="block text-sm text-muted-foreground hover:text-foreground transition-colors pl-2"
+        >
+          {spreadsheet.title}
+        </Link>
+      ))}
+    </div>
+  )
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -34,12 +80,36 @@ export default function RootLayout({
     <html lang="en">
       <body className="flex min-h-screen">
         {/* Sidebar - shown always on desktop, sheet on mobile */}
-        <aside className="hidden md:flex w-64 flex-col border-r bg-muted/40">
-          <nav className="flex flex-col gap-2 p-4">
-            <Link href="/scraper" className="font-medium">Home</Link>
-            <Link href="/dashboard" className="font-medium">Tables</Link>
-            <Link href="/credits" className="font-medium">Credits</Link>
+        <aside className="hidden md:flex w-64 flex-col border-r bg-background">
+          <div className="flex h-14 items-center px-4 border-b">
+            <Link href="/scraper" className="text-sm font-semibold tracking-tight">ClienFlow</Link>
+          </div>
+          <nav className="flex-1 p-3">
+            <div className="space-y-6">
+              <div>
+                <div className="px-2 mb-2 text-xs font-medium text-muted-foreground">General</div>
+                <div className="flex flex-col">
+                  <Link href="/scraper" className="px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 rounded-md transition-colors">Home</Link>
+                  <Link href="/dashboard" className="px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 rounded-md transition-colors">Tables</Link>
+                  <Link href="/credits" className="px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 rounded-md transition-colors">Credits</Link>
+                </div>
+              </div>
+              <div>
+                <div className="px-2 mb-2 text-xs font-medium text-muted-foreground">Spreadsheets</div>
+                <div className="flex flex-col">
+                  <Link href="/spreadsheet-import" className="px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 rounded-md transition-colors">Import Spreadsheet</Link>
+                  <Link href="/spreadsheets" className="px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 rounded-md transition-colors">View Spreadsheets</Link>
+                </div>
+              </div>
+              <div>
+                <div className="px-2 mb-2 text-xs font-medium text-muted-foreground">Imported Tables</div>
+                <div className="px-1">
+                  <SpreadsheetTables />
+                </div>
+              </div>
+            </div>
           </nav>
+          <div className="border-t p-3 text-xs text-muted-foreground">© {new Date().getFullYear()} My App</div>
         </aside>
 
         {/* Mobile Sidebar (Sheet) */}
@@ -51,12 +121,19 @@ export default function RootLayout({
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-64">
-              <nav className="flex flex-col gap-4 mt-4">
-                <Link href="/" className="font-medium">Dashboard</Link>
-                <Link href="/projects" className="font-medium">Projects</Link>
-                <Link href="/reports" className="font-medium">Reports</Link>
-                <Link href="/settings" className="font-medium">Settings</Link>
-              </nav>
+              <div className="mt-4">
+                <div className="px-2 mb-2 text-xs font-medium text-muted-foreground">General</div>
+                <nav className="flex flex-col">
+                  <Link href="/scraper" className="px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 rounded-md transition-colors">Home</Link>
+                  <Link href="/dashboard" className="px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 rounded-md transition-colors">Tables</Link>
+                  <Link href="/credits" className="px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 rounded-md transition-colors">Credits</Link>
+                </nav>
+                <div className="px-2 mt-4 mb-2 text-xs font-medium text-muted-foreground">Spreadsheets</div>
+                <nav className="flex flex-col">
+                  <Link href="/spreadsheet-import" className="px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 rounded-md transition-colors">Import Spreadsheet</Link>
+                  <Link href="/spreadsheets" className="px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 rounded-md transition-colors">View Spreadsheets</Link>
+                </nav>
+              </div>
             </SheetContent>
           </Sheet>
         </div>
