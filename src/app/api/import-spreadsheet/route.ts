@@ -29,7 +29,6 @@ export async function POST(request: NextRequest) {
     // For private spreadsheets, you'll need OAuth2 authentication
     if (process.env.GOOGLE_SERVICE_ACCOUNT_KEY_FILE) {
       // Use service account authentication for private sheets
-      console.log('Using service account authentication')
       const auth = new google.auth.GoogleAuth({
         keyFile: process.env.GOOGLE_SERVICE_ACCOUNT_KEY_FILE,
         scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
@@ -37,22 +36,18 @@ export async function POST(request: NextRequest) {
       sheets = google.sheets({ version: 'v4', auth })
     } else if (process.env.GOOGLE_SHEETS_API_KEY) {
       // Use API key for public sheets
-      console.log('Using API key authentication')
       sheets = google.sheets({ 
         version: 'v4',
         auth: process.env.GOOGLE_SHEETS_API_KEY
       })
     } else {
-      console.error('No Google Sheets API credentials found')
       throw new Error('No Google Sheets API credentials found. Please set GOOGLE_SHEETS_API_KEY or GOOGLE_SERVICE_ACCOUNT_KEY_FILE')
     }
 
     // Get spreadsheet metadata
-    console.log('Attempting to access spreadsheet ID:', spreadsheetId)
     const spreadsheet = await sheets.spreadsheets.get({
       spreadsheetId,
     })
-    console.log('Successfully accessed spreadsheet:', spreadsheet.data.properties?.title)
 
     const title = spreadsheet.data.properties?.title || 'Untitled Spreadsheet'
 
@@ -151,7 +146,6 @@ export async function POST(request: NextRequest) {
         }
 
       } catch (sheetError) {
-        console.error(`Error processing sheet ${sheetName}:`, sheetError)
         // Continue with other sheets even if one fails
       }
     }
@@ -160,6 +154,16 @@ export async function POST(request: NextRequest) {
     const recordCount = await prisma.spreadsheetRecord.count({
       where: { spreadsheetId: dbSpreadsheet.id }
     })
+
+    // Deduct 1 credit for spreadsheet import
+    try {
+      const credits = await prisma.credits.findFirst()
+      if (credits) {
+        await prisma.credits.update({ where: { id: credits.id }, data: { balance: Math.max(0, credits.balance - 1) } })
+      } else {
+        await prisma.credits.create({ data: { balance: 249 } })
+      }
+    } catch {}
 
     return NextResponse.json({
       success: true,
@@ -173,8 +177,6 @@ export async function POST(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Error importing spreadsheet:', error)
-    
     // Provide more specific error messages
     let errorMessage = 'Failed to import spreadsheet'
     let statusCode = 500

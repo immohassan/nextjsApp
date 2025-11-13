@@ -91,20 +91,13 @@ export default function RootLayout({
                 <div className="flex flex-col">
                   <Link href="/scraper" className="px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 rounded-md transition-colors">Home</Link>
                   <Link href="/dashboard" className="px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 rounded-md transition-colors">Tables</Link>
-                  <Link href="/credits" className="px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 rounded-md transition-colors">Credits</Link>
+                  {/* <Link href="/credits" className="px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 rounded-md transition-colors">Credits</Link> */}
                 </div>
               </div>
               <div>
-                <div className="px-2 mb-2 text-xs font-medium text-muted-foreground">Spreadsheets</div>
-                <div className="flex flex-col">
-                  <Link href="/spreadsheet-import" className="px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 rounded-md transition-colors">Import Spreadsheet</Link>
-                  <Link href="/spreadsheets" className="px-2 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 rounded-md transition-colors">View Spreadsheets</Link>
-                </div>
-              </div>
-              <div>
-                <div className="px-2 mb-2 text-xs font-medium text-muted-foreground">Imported Tables</div>
+                {/* <div className="px-2 mb-2 text-xs font-medium text-muted-foreground">Imported Tables</div> */}
                 <div className="px-1">
-                  <SpreadsheetTables />
+                  {/* <SpreadsheetTables /> */}
                 </div>
               </div>
             </div>

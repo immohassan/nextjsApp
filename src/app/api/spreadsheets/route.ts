@@ -46,7 +46,6 @@ export async function GET(request: NextRequest) {
     }
 
   } catch (error) {
-    console.error('Error fetching spreadsheets:', error)
     return NextResponse.json(
       { 
         error: 'Failed to fetch spreadsheets',
@@ -80,7 +79,6 @@ export async function DELETE(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Error deleting spreadsheet:', error)
     return NextResponse.json(
       { 
         error: 'Failed to delete spreadsheet',

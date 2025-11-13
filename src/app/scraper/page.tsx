@@ -16,7 +16,7 @@ export default function NewDashboardPage() {
     {
       title: "Scrape Sales Navigator search results",
       desc: "Extract people from a sales navigator search",
-      badge: "Free",
+      badge: "1 Credit",
       tag: "Popular",
       icon: <MdOutlinePeopleAlt className="h-5 w-5" />,
       href: "/scraper/salesNavigator"
@@ -63,7 +63,7 @@ export default function NewDashboardPage() {
       </Tabs>
 
       {/* Category Tabs */}
-      <Tabs defaultValue="people" className="w-full">
+      {/* <Tabs defaultValue="people" className="w-full">
         <TabsList className="flex gap-2">
           <TabsTrigger value="people" className="flex items-center gap-2 px-3 py-1.5 border rounded-md data-[state=active]:bg-muted">
             <MdOutlinePeopleAlt /> Find people
@@ -75,7 +75,7 @@ export default function NewDashboardPage() {
             <LuRadar /> Monitor <Badge className="ml-1 bg-yellow-100 text-yellow-700">New</Badge>
           </TabsTrigger>
         </TabsList>
-      </Tabs>
+      </Tabs> */}
 
       {/* Cards Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -94,11 +94,11 @@ export default function NewDashboardPage() {
               <div className="flex justify-between items-center text-sm">
                 <Badge variant="secondary">{card.badge}</Badge>
                 <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="sm" className="flex items-center gap-1">
+                  {/* <Button variant="ghost" size="sm" className="flex items-center gap-1">
                     <IconPlayerPlay size={14} /> Demo
-                  </Button>
-                  <Button variant="ghost" size="sm"><IconPlus size={14} /></Button>
-                  <Button variant="ghost" size="sm"><IconDots size={14} /></Button>
+                  </Button> */}
+                  {/* <Button variant="ghost" size="sm"><IconPlus size={14} /></Button>
+                  <Button variant="ghost" size="sm"><IconDots size={14} /></Button> */}
                 </div>
               </div>
             </CardContent>

@@ -100,7 +100,6 @@ export async function GET(
     })
 
   } catch (error) {
-    console.error('Error fetching table data:', error)
     return NextResponse.json(
       { 
         error: 'Failed to fetch table data',
@@ -163,7 +162,6 @@ export async function PUT(
     })
 
   } catch (error) {
-    console.error('Error updating record:', error)
     return NextResponse.json(
       { 
         error: 'Failed to update record',

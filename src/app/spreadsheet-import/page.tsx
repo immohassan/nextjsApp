@@ -1,11 +1,11 @@
 'use client'
-
+import Link from "next/link"
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-
+import { IconArrowLeft, IconClock, IconListDetails, IconCheck } from "@tabler/icons-react"  
 export default function SpreadsheetImportPage() {
   const [spreadsheetUrl, setSpreadsheetUrl] = useState('')
   const [loading, setLoading] = useState(false)
@@ -47,6 +47,12 @@ export default function SpreadsheetImportPage() {
 
   return (
     <div className="container mx-auto p-6 max-w-2xl">
+      <Link href="/scraper" className="mb-3">
+          <Button variant="ghost" size="sm" className="flex items-center gap-2">
+            <IconArrowLeft className="h-4 w-4" />
+            Back
+          </Button>
+          </Link>
       <Card>
         <CardHeader>
           <CardTitle>Import Google Spreadsheet</CardTitle>

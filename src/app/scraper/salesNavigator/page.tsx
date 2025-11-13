@@ -11,7 +11,7 @@ export default function SalesNavPage() {
   const [formData, setFormData] = useState({
     searchName: "",
     salesNavUrl: "",
-    liAtCookie: ""
+    // liAtCookie: ""
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showSuccessAlert, setShowSuccessAlert] = useState(false)
@@ -20,35 +20,40 @@ export default function SalesNavPage() {
     setFormData(prev => ({ ...prev, [field]: value }))
   }
 
-  const isFormValid = formData.searchName && formData.salesNavUrl && formData.liAtCookie
+  const isFormValid = formData.searchName && formData.salesNavUrl
 
   const handleSubmit = async () => {
     if (!isFormValid) return
     
     setIsSubmitting(true)
     try {
-      const response = await fetch('https://goclienflow.com/webhook/076f4358-cad3-4ac4-916b-8f79b143b05b', {
+      // Call our API route which will proxy the request to the external webhook
+      const response = await fetch('/api/webhook/sales-navigator', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify({
+          searchName: formData.searchName,
+          salesNavUrl: formData.salesNavUrl,
+        })
       })
+      
+      const result = await response.json()
       
       if (response.ok) {
         setShowSuccessAlert(true)
         // Reset form after successful submission
         setFormData({
           searchName: "",
-          salesNavUrl: "",
-          liAtCookie: ""
+          salesNavUrl: ""
         })
       } else {
-        alert('Failed to submit form')
+        alert(result.error || 'Failed to submit form. Please try again.')
       }
     } catch (error) {
       console.error('Error submitting form:', error)
-      alert('Error submitting form')
+      alert('Error submitting form. Please try again.')
     } finally {
       setIsSubmitting(false)
     }
@@ -67,11 +72,11 @@ export default function SalesNavPage() {
           <h1 className="text-xl font-semibold">Sales Nav Search Results</h1>
         </div>
         <div className="flex items-center gap-2">
-          <Button disabled>Start a new extraction</Button>
+          {/* <Button disabled>Start a new extraction</Button>
           <Button variant="outline" size="sm" className="flex items-center gap-2">
             <IconListDetails className="h-4 w-4" />
             History
-          </Button>
+          </Button> */}
         </div>
       </div>
 
@@ -91,17 +96,19 @@ export default function SalesNavPage() {
         <Card className="p-4">
           <CardHeader>
             <CardTitle>
-              A. Extraction set up{" "}
-              <span className="text-sm font-normal text-muted-foreground">
+              <h1 className="text-center text-lg mt-3 mb-2">Extraction set up{" "}
+              </h1>
+              {/* <p className="text-sm font-normal text-muted-foreground space-y-6">
                 Fill the form and launch the extraction
-              </span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="bg-blue-50 text-blue-800 text-sm p-3 rounded-md border border-blue-200">
+              </p> */}
+              <div className="bg-blue-50 text-blue-800 text-sm p-3 rounded-md border border-blue-200">
               LinkedIn only displays the first <b>2500 results</b> of a search, so we won’t be able
               to access any more than this.
             </div>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            
 
             <div>
               <label className="block font-medium mb-1">1. Give your search a name</label>
@@ -124,7 +131,7 @@ export default function SalesNavPage() {
               </p>
             </div>
 
-            <div>
+            {/* <div>
               <label className="block font-medium mb-1">3. Connect your LinkedIn account</label>
               <div className="flex items-center gap-2 mb-2">
                 <Button size="sm" variant="secondary" className="bg-pink-100 text-pink-700" asChild>
@@ -142,7 +149,7 @@ export default function SalesNavPage() {
                 value={formData.liAtCookie}
                 onChange={(e) => handleInputChange('liAtCookie', e.target.value)}
               />
-            </div>
+            </div> */}
 
             <Button 
               className="w-full" 
